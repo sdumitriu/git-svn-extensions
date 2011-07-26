@@ -432,7 +432,7 @@ function git-svn-migrate {
         summary="$summary, using \033[1;37m$authors\033[0m to convert commit authors"
         cmd="$cmd --authors-file=$authors"
     fi
-    cmd="$cmd $repo ."
+    cmd="$cmd $repo . --no-minimize-url"
 
     echo
     echo -e $summary
@@ -472,6 +472,19 @@ function git-svn-migrate {
     echo
     echo -e "\033[1;32mStep 5/5:\033[0;32m Garbage collection\033[0m"
     git gc --aggressive --prune
+
+    echo
+    echo -e
+
+    echo -e "Make this a bare repository (for use as a remote server)?\033[0;32m"
+    read -e -p "[Y|n] > " bare
+    echo -n -e "\033[0m"
+    if [[ $bare != "n" ]]
+    then
+        echo -e "Deleting local files..."          && rm -rf * &&
+        echo -e "Moving repository information..." && mv -f .git/* . && rm -rf .git/ &&
+        echo -e "Setting repository as bare..."    && sed -e "s/bare = false/bare = true/g" -i config
+    fi
 
     echo
     echo -e "\033[1;32mAll done!\033[0m"
