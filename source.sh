@@ -416,7 +416,7 @@ function git-svn-migrate {
             echo "jdoe = John Doe <john.doe@company.net>"
             echo "gfawkes = Guy Fawkes <guy.fawkes@company.net>"
             echo
-            echo -e "\033[1;31mWarning! The migration will fail if the provided authors file doesn't contain a valid entry for one of the authors found in the SVN repository.\033[0m"
+            echo -e "\033[1;33mWARNING: The migration will fail if the provided authors file doesn't contain a valid entry for one of the authors found in the SVN repository.\033[0m"
         fi
     done
 
@@ -436,7 +436,7 @@ function git-svn-migrate {
 
     echo
     echo -e $summary
-    echo -e "\033[1;31mWarning! The new git repository will be created in the current directory.\033[0m"
+    echo -e "\033[1;33mWARNING: The new git repository will be created in the current directory.\033[0m"
     echo -e "Proceed?\033[0;32m"
     read -e -p "[Y|n] > " go
     echo -n -e "\033[0m"
@@ -449,7 +449,7 @@ function git-svn-migrate {
     # Let's go!
     echo
     echo -e "\033[1;32mStep 1/5:\033[0;32m Fetching commit data\033[0m"
-    $cmd || $cmd  --no-minimize-url || { echo -e "\033[1;31mFailed.\033[0m" ; return 1 ; }
+    $cmd || (echo -e "\033[1;33mCannot access parent directory. Target directory moves will not be migrated.\033[0m" && $cmd --no-minimize-url) || { echo -e "\033[1;31mFailed.\033[0m" ; return 1 ; }
 
     echo
     echo -e "\033[1;32mStep 2/5:\033[0;32m Cleaning up fake branches\033[0m"
