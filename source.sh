@@ -432,7 +432,7 @@ function git-svn-migrate {
         summary="$summary, using \033[1;37m$authors\033[0m to convert commit authors"
         cmd="$cmd --authors-file=$authors"
     fi
-    cmd="$cmd $repo . --no-minimize-url"
+    cmd="$cmd $repo ."
 
     echo
     echo -e $summary
@@ -449,7 +449,7 @@ function git-svn-migrate {
     # Let's go!
     echo
     echo -e "\033[1;32mStep 1/5:\033[0;32m Fetching commit data\033[0m"
-    $cmd || { echo -e "\033[1;31mFailed.\033[0m" ; return 1 ; }
+    $cmd || $cmd  --no-minimize-url || { echo -e "\033[1;31mFailed.\033[0m" ; return 1 ; }
 
     echo
     echo -e "\033[1;32mStep 2/5:\033[0;32m Cleaning up fake branches\033[0m"
@@ -481,7 +481,7 @@ function git-svn-migrate {
     echo -n -e "\033[0m"
     if [[ $bare != "n" ]]
     then
-        echo -e "Deleting local files..."          && rm -rf * &&
+        echo -e "Deleting local files..."          && rm -rf `ls -A1 | grep -i -v .git` &&
         echo -e "Moving repository information..." && mv -f .git/* . && rm -rf .git/ &&
         echo -e "Setting repository as bare..."    && sed -e "s/bare = false/bare = true/g" -i config
     fi
