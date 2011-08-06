@@ -481,7 +481,7 @@ function git-svn-migrate {
     echo -n -e "\033[0m"
     if [[ $bare != "n" ]]
     then
-        echo -e "Deleting local files..."          && rm -rf `ls -A1 | grep -i -v .git` &&
+        echo -e "Deleting local files..."          && rm -rf `ls -A1 | grep -i -v ^.git$` &&
         echo -e "Moving repository information..." && mv -f .git/* . && rm -rf .git/ &&
         echo -e "Setting repository as bare..."    && sed -e "s/bare = false/bare = true/g" -i config
     fi
